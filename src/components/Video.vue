@@ -19,12 +19,13 @@
             </v-col>
 
             <v-col>
-                <h3>Active Camera</h3>
+                <v-card class="mx-auto" max-width="400" tile>
+                    <v-card-title>Filters</v-card-title>
+                    <v-list-item v-for="filter in filters" :key=filter>
+                        <v-list-item-subtitle>{{ filter }}</v-list-item-subtitle>
+                    </v-list-item>
+                </v-card>
 
-            </v-col>
-
-            <v-col>
-                <h3>Filters</h3>                                
             </v-col>
 
         </v-row>
@@ -41,10 +42,17 @@
      computed: {
          cameras() {
              return this.$store.getters.getCameras;             
+         },
+         activeCamera() {
+             return this.$store.getters.selectedCamera;
+         },
+         filters() {
+             return this.$store.getters.getFilters;
          }
      },
      mounted: function() {
          this.$store.dispatch('fetchCameras')
+         this.$store.dispatch('fetchFilters')
      }
  }
 </script>

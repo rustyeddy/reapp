@@ -7,21 +7,33 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        camera: {},
         cameras: [],
+        selectedCamera: {},
+        
+        filters: [],
+        selectedFilter: "",
+
 	status: "",
     },
+
     getters: {
-          getCamera(state) {
+        getCamera(state) {
             return state.camera            
         },
         getCameras(state) {
-            return state.cameras;
+            return state.cameras
         },
         selectedCamera(state) {
-            return state.selectedCamera;
+            return state.selectedCamera
         },
+        getFilters(state) {
+            return state.filters
+        },
+        getFilter(state) {
+            return state.selectedFilter
+        }
     },
+
     mutations: {
         setCamera(state, cam) {
             state.camera = cam;
@@ -30,13 +42,17 @@ export default new Vuex.Store({
             state.status = status;
         },
         SET_CAMERAS(state, cams) {
-	    console.log(cams)
             state.cameras = cams;
         },
         SELECT_CAMERA(state, cam) {
             state.selectedCamera = cam;
         },
-
+        SET_FILTERS(state, filters) {
+            state.filters = filters;
+        },
+        SET_FILTER(state, filter) {
+            state.selectedFilter = filter;
+        },
     },
     actions: {
         fetchCameras(context) {
@@ -51,6 +67,14 @@ export default new Vuex.Store({
         },
         selectCamera(context, cam) {
             context.commit("selectCamera", cam);
+        },
+
+        fetchFilters(context) {
+            context.commit('SET_LOADING_STATUS', 'loadingFilters')
+            axios.get('http://10.11.10.10:8080/api/filters').then(response => {
+                context.commit('SET_FILTERS', response.data.filters)
+                context.commit('SET_LOADING_STATUS', 'notLoading')
+            })
         },
     },
     modules: {
